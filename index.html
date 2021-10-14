@@ -24,10 +24,13 @@
 			var fontttf = "./setofont/setofont.ttf";
 			
 			var forGroup = [];
+			//var forMinuteGroup = [];
+			let line;
 			let container;
 			let camera, cameraTarget, scene, renderer;
 			let group, textMesh1, textMesh2, textGeo, material;
 			let firstLetter = true;
+			var pivot,pivot2,pivot3;
 
 			let text = '子';
 			let text2 = '丑';
@@ -42,6 +45,8 @@
 			let text11 = '戌';
 			let text12 = '亥';
 			let plane_text = '高等計算機圖形作業';
+			
+			
 			
 			const height = 20,
 				size = 70,
@@ -64,6 +69,10 @@
 
 			init();
 			animate();
+			var today=new Date();
+
+			var currentDateTime = today.getHours()+':'+today.getMinutes()+':'+today.getSeconds();
+			console.log(currentDateTime);
 			
 
 			function init() {
@@ -73,7 +82,7 @@
 
 				// CAMERA
 
-				camera = new THREE.PerspectiveCamera( 50, window.innerWidth / window.innerHeight, 1, 2000 );
+				camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 2000 );
 				camera.position.set( 0, 0, 1500 );
 
 				cameraTarget = new THREE.Vector3( 0, 150, 0 );
@@ -94,16 +103,34 @@
 				//pointLight.position.set( 0, 100, 90 );
 				//pointLight.color.setHSL( Math.random(), 1, 0.5 );
 				//scene.add( pointLight );
-
+				
+				
 				material = new THREE.MeshBasicMaterial( { color: 0x9ca9de } ); ///開燈後打光
 				material2 = new THREE.MeshBasicMaterial( { color: 0x2f618e} ); ///開燈後打光
+				material3 = new THREE.LineBasicMaterial( {
+					color: 0xffffff,
+					
+					
+				} );
+				material4 = new THREE.LineBasicMaterial( {
+					color: 0xffff00,
+					
+					
+				} );
+				material5 = new THREE.LineBasicMaterial( {
+					color: 0xff0000,
+					
+					
+				} );
+
+
 
 				//把不同object打包成一個group送到scene
 				group = new THREE.Group();
 				//group.position.y = 100;
 				forGroup.push( group );
 				scene.add( group );
-
+				
 
 				const loader = new THREE.TTFLoader();
 				
@@ -154,6 +181,75 @@
 
 				//window.addEventListener( 'resize', onWindowResize );
 				window.addEventListener('click', onClick);
+				//var pivot = new THREE.Object3D();
+				//circle
+				const geometry7 = new THREE.CircleGeometry( 5, 1 );
+				const material7 = new THREE.MeshBasicMaterial( { color: 0xffffff } );
+				const circle = new THREE.Mesh( geometry7, material7 );
+				circle.position.x= 50;
+				circle.position.y = 100;
+				scene.add( circle );
+
+				// Pivot point
+				pivot = new THREE.Object3D();
+				circle.add(pivot);
+				pivot2 = new THREE.Object3D();
+				circle.add(pivot2);
+				pivot3 = new THREE.Object3D();
+				circle.add(pivot3);
+				///line
+				//Make a pivot
+				
+				const points = [];
+				points.push( new THREE.Vector3( 0, 0, 0 ) );
+				points.push( new THREE.Vector3( 0, 200, 0 ) );
+				
+
+				const geometry = new THREE.BufferGeometry().setFromPoints( points );
+				
+
+				line = new THREE.Line( geometry, material4 );
+				
+				//pivot.position.set(new THREE.Vector3(50,100,0));
+				//pivot.rotation.z = Math.PI / 2;
+				
+				pivot.add(line);
+				//scene.add( line );
+				const points2 = [];
+				points2.push( new THREE.Vector3( 0, 0, 0 ) );
+				points2.push( new THREE.Vector3( 0, 100, 0 ) );
+				
+
+				const geometry8 = new THREE.BufferGeometry().setFromPoints( points2 );
+				
+
+				line2 = new THREE.Line( geometry8, material5 );
+				pivot2.add(line2);
+				
+				//pivot.position.set(new THREE.Vector3(50,100,0));
+				//pivot.rotation.z = Math.PI / 2;
+				
+				
+
+				const points3 = [];
+				points3.push( new THREE.Vector3( 0, 0, 0 ) );
+				points3.push( new THREE.Vector3( 0, 300, 0 ) );
+				
+
+				const geometry9 = new THREE.BufferGeometry().setFromPoints( points3 );
+				
+
+				line3 = new THREE.Line( geometry9, material3 );
+				
+				//pivot.position.set(new THREE.Vector3(50,100,0));
+				//pivot.rotation.z = Math.PI / 2;
+				
+				pivot3.add(line3);
+				
+				
+
+			
+
 
 			}
 
@@ -243,8 +339,22 @@
 				
 			}
 			
+			
 							
 			function animate() {
+				var today=new Date();
+
+				var Hours = today.getHours();
+				var Minutes = today.getMinutes();
+				var Seconds = today.getSeconds();
+				
+			
+				//line.rotation.z = Math.PI;
+				pivot.rotation.z = -2*Math.PI/60*Minutes;
+				pivot2.rotation.z = -2*Math.PI/12*Hours;
+				pivot3.rotation.z = -2*Math.PI/60*Seconds;
+				
+				
 
 				requestAnimationFrame( animate );
 
@@ -279,7 +389,7 @@
 				so.addChild("將地支以圓圈排列", 2, true);
 				so.addChild("滑鼠點擊 12 地支分別跳轉網頁", 1, true);
 				so.addChild("顯示 高等計算機圖形作業 ", 1, true);
-				so.addChild("時鐘效果", 1, false);
+				so.addChild("時鐘效果", 1, true);
 				so.addChild("任何 ply 格式模型", 1, false);
 				console.log("in");
 				//產生自評表，參數如下所示
